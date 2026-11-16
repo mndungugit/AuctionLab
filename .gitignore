@@ -1,0 +1,48 @@
+# =============================================================
+#  AuctionLab – .gitignore
+#  Keep anything sensitive or machine-specific out of the repo.
+# =============================================================
+
+# ------------------------------------------------------------
+# Local config – contains your SQL Server instance name,
+# file paths, and later the web_reader password.
+# NEVER commit this file.
+# ------------------------------------------------------------
+config.ps1
+
+# ------------------------------------------------------------
+# Downloaded source files (PDFs from the auction site)
+# ------------------------------------------------------------
+downloads/
+
+# ------------------------------------------------------------
+# Log files written by the ingest scripts
+# ------------------------------------------------------------
+logs/
+
+# ------------------------------------------------------------
+# Screenshots – may contain your machine name, Windows user
+# name, or other identifying info (e.g. SSMS connect dialogs)
+# ------------------------------------------------------------
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+
+# ------------------------------------------------------------
+# Windows / editor junk
+# ------------------------------------------------------------
+Thumbs.db
+desktop.ini
+*.suo
+*.bak
+*.tmp
+.vs/
+
+# ------------------------------------------------------------
+# PowerShell transcript / output captures
+# ------------------------------------------------------------
+*.log
+*.transcript
