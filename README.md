@@ -1,6 +1,6 @@
 # AuctionLab
 
-A local data pipeline that downloads the K.O. Towing auction vehicle list,
+A local data pipeline that downloads A Towing auction vehicle list,
 parses it into SQL Server, validates VINs against the NHTSA database, and
 powers a browsable inventory site.
 
