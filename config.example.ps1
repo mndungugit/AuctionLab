@@ -35,3 +35,4 @@ $LogDir       = "$WorkingRoot\logs"
 # Public URL of the auction PDF.  Change only if K.O. Towing
 # moves it to a different address.
 $AuctionUrl   = 'https://www.kotowing.net/pdf/auction-list-marietta.pdf'
+$WebReaderPassword = '@webReader123'  # Password for the auctionlab_web SQL Server login
