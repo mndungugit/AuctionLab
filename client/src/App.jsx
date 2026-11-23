@@ -13,7 +13,6 @@ function Nav() {
       <ul className="nav-links">
         <li><NavLink to="/">Browse</NavLink></li>
         <li><a href="#how-it-works">How It Works</a></li>
-        <li><a href="https://kotowing.com" target="_blank" rel="noreferrer">KO Towing</a></li>
         <li><a href="#about">About</a></li>
       </ul>
 

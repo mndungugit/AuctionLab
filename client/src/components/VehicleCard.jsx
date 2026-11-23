@@ -1,87 +1,74 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { fetchCarImage } from '../api/carImage.js'
+import { fetchCarImage } from '../api/carImage'
 
-/**
- * VehicleCard
- * Displays a summary card for one vehicle in the browse grid.
- * Props: vehicle object from pub.vw_Vehicle
- */
-export default function VehicleCard({ vehicle }) {
-  const navigate = useNavigate()
-  const [imgSrc, setImgSrc]     = useState(null)
-  const [imgLoaded, setImgLoaded] = useState(false)
+export default function VehicleCard({ vehicle: v, onClick }) {
+  const [imgSrc, setImgSrc] = useState(null)
+  const [imgErr, setImgErr] = useState(false)
 
   useEffect(() => {
     let cancelled = false
-    fetchCarImage(vehicle.Make, vehicle.Model, vehicle.ModelYear, vehicle.Vin).then(url => {
-      if (!cancelled) setImgSrc(url)
-    })
+    fetchCarImage(v.Make, v.Model, v.ModelYear, v.Vin)
+      .then(url => { if (!cancelled) setImgSrc(url) })
+      .catch(() => { if (!cancelled) setImgErr(true) })
     return () => { cancelled = true }
-  }, [vehicle.Make, vehicle.Model, vehicle.ModelYear, vehicle.Vin])
+  }, [v.Make, v.Model, v.ModelYear, v.Vin])
 
-  const title = [vehicle.Make, vehicle.Model]
-    .filter(Boolean)
-    .join(' ') || 'Unknown Vehicle'
-
-  const handleClick = () => navigate(`/vehicle/${vehicle.VehicleId}`)
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      handleClick()
-    }
-  }
-
-  const saleDate = vehicle.SaleDate
-    ? new Date(vehicle.SaleDate).toLocaleDateString('en-US', {
-        month: 'short', day: 'numeric', year: 'numeric'
-      })
-    : null
+  const title = [v.Make, v.Model].filter(Boolean).join(' ') || 'Unknown Vehicle'
 
   return (
-    <article
+    <div
       className="vehicle-card"
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
+      onClick={onClick}
+      onKeyDown={e => e.key === 'Enter' && onClick?.()}
       tabIndex={0}
       role="button"
-      aria-label={`View details for ${vehicle.ModelYear || ''} ${title}`}
+      aria-label={`View details for ${v.ModelYear ?? ''} ${title}`}
     >
-      {/* ---- Image strip ---- */}
+      {/* image */}
       <div className="card-image-wrap">
-        {imgSrc && !imgLoaded && <span className="card-image-placeholder">&#x1F697;</span>}
-        {imgSrc ? (
+        {imgSrc && !imgErr ? (
           <img
             src={imgSrc}
-            alt={`${vehicle.ModelYear || ''} ${title}`}
-            onLoad={() => setImgLoaded(true)}
-            onError={() => { setImgSrc(null); setImgLoaded(false) }}
-            style={{ display: imgLoaded ? 'block' : 'none' }}
+            alt={`${v.ModelYear ?? ''} ${title}`}
+            onError={() => setImgErr(true)}
+            loading="lazy"
           />
         ) : (
-          <span className="card-image-placeholder">&#x1F697;</span>
+          <span className="card-image-placeholder">🚗</span>
         )}
       </div>
 
-      {/* ---- Text content ---- */}
+      {/* year + badge */}
       <div className="card-header">
-        <span className="card-year">{vehicle.ModelYear || '&mdash;'}</span>
-        <span className={`badge ${vehicle.IsVerified ? 'badge-verified' : 'badge-unverified'}`}>
-          {vehicle.IsVerified ? 'Verified' : 'Unverified'}
-        </span>
+        <span className="card-year">{v.ModelYear ?? '—'}</span>
+        {v.Vin ? (
+          <span className="badge badge-verified">VIN ✓</span>
+        ) : (
+          <span className="badge badge-unverified">No VIN</span>
+        )}
       </div>
 
+      {/* make / model */}
       <h3 className="card-title">{title}</h3>
 
+      {/* meta row */}
       <div className="card-meta">
-        {vehicle.Color     && <span>{vehicle.Color}</span>}
-        {vehicle.BodyClass && <span>{vehicle.BodyClass}</span>}
+        {v.BodyClass && <span>{v.BodyClass}</span>}
+        {v.Color     && <span>{v.Color}</span>}
+        {v.Cylinders && <span>{v.Cylinders} cyl</span>}
       </div>
 
-      {saleDate && (
-        <p className="card-sale-date">Sale: {saleDate}</p>
-      )}
-    </article>
+      {/* VIN */}
+      <div className="card-vin">
+        VIN: {v.Vin ? v.Vin.toUpperCase() : 'N/A'}
+      </div>
+
+      {/* CTA */}
+      <div className="card-footer">
+        <button className="btn-view" tabIndex={-1}>
+          View Details →
+        </button>
+      </div>
+    </div>
   )
 }
