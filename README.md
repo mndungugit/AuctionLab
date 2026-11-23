@@ -1,114 +1,108 @@
 # AuctionLab
 
-A local data pipeline that downloads A Towing auction vehicle list,
-parses it into SQL Server, validates VINs against the NHTSA database, and
-powers a browsable inventory site.
+A full-stack web app I built to browse real vehicle auction inventory from a local towing company in Marietta, GA. The vehicles come from KO Towing's Title 40-11-2 impound auctions — these are actual cars that have been towed and go up for public bid under Georgia state law.
 
-Built as a learning project covering T-SQL, PowerShell, a REST API, and a
-React front end.
+The idea started simple: I wanted a better way to browse what's available before auction day. It turned into a full project with a live database, a REST API, and a custom-built frontend with real-time filtering.
 
 ---
 
-## Repo layout
+## What It Does
+
+- **Browse 70+ live vehicles** pulled directly from a SQL Server database
+- **Filter by make, year range, and body type** — results update instantly
+- **Manager's Special** featured on the homepage — always shows the newest vehicle in inventory
+- **Vehicle detail pages** with full specs and VIN lookup
+- **VIN-based vehicle images** served from a live image source
+- **Responsive dark UI** built from scratch — no component libraries
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, React Router |
+| Backend | Node.js, Express |
+| Database | SQL Server (T-SQL stored procedures) |
+| Styling | Custom CSS with design tokens |
+| Images | VIN-based S3 image source |
+| Dev tools | PowerShell automation, Git |
+
+---
+
+## Project Structure
 
 ```
 AuctionLab/
-├── .gitignore
-├── README.md
-├── config.example.ps1          ← copy to config.ps1 and fill in your values
-│
-├── sql/
-│   ├── 01_create_auctionlab.sql    ← database, schemas, and staging tables
-│   ├── 02_parse_auction_batch.sql  ← stored proc: raw lines → vehicle rows
-│   ├── 03_vin_functions.sql        ← check-digit function + VinDecode table
-│   └── ...                         ← analysis views, pub schema, web_reader
-│
-└── scripts/
-    ├── 02_load_auction_pdf.ps1     ← download PDF, hash-check, load raw lines
-    ├── 03_decode_vins.ps1          ← call NHTSA API, verify VINs
-    └── ...                         ← scheduling helpers
-```
-
-Scripts are numbered to match the build steps so you can follow the work
-in order on GitHub.
-
----
-
-## Prerequisites
-
-| Tool | Purpose |
-|------|---------|
-| SQL Server 2022 or later (Developer or Express) | Database |
-| SQL Server Management Studio (SSMS) | Run SQL scripts |
-| PowerShell 5.1 or later | Ingest and decode scripts |
-| [Poppler for Windows](https://github.com/oschwartz10612/poppler-windows/releases) | `pdftotext.exe` extracts text from the PDF |
-| SqlServer PowerShell module | Insert rows from PowerShell |
-
-Install the PowerShell module once:
-```powershell
-Install-Module -Name SqlServer -Scope CurrentUser -Force
+├── client/               # React + Vite frontend
+│   └── src/
+│       ├── api/          # API client, image fetching
+│       ├── components/   # VehicleCard
+│       └── pages/        # BrowsePage, DetailPage
+├── api/                  # Express REST API
+│   └── server.js         # Endpoints: /api/vehicles, /api/filters
+└── screenshots/          # Progress screenshots committed over time
 ```
 
 ---
 
-## First-time setup
+## Running It Locally
 
-**Step 1 – Clone the repo and set up your config**
+You'll need Node.js and access to a SQL Server instance with the auction data.
 
-```powershell
-git clone https://github.com/<your-username>/AuctionLab.git
-cd AuctionLab
-Copy-Item config.example.ps1 config.ps1
-# Open config.ps1 in VS Code and fill in your SQL instance name,
-# path to pdftotext.exe, and working folder.
+**1. Start the API**
+```bash
+cd api
+npm install
+node server.js
+# API runs on http://localhost:3001
 ```
 
-**Step 2 – Create the local working folders**
-
-```powershell
-. .\config.ps1          # load $DownloadDir and $LogDir
-New-Item -ItemType Directory -Force $WorkingRoot, $DownloadDir, $LogDir
+**2. Start the frontend**
+```bash
+cd client
+npm install
+npm run dev
+# App runs on http://localhost:3000
 ```
 
-**Step 3 – Run the SQL setup script**
-
-Open SSMS, connect to your instance, open `sql\01_create_auctionlab.sql`,
-and run it.  The script is rerunnable — it skips anything already created.
-
-**Step 4 – Run the ingest script**
-
-```powershell
-.\scripts\02_load_auction_pdf.ps1
-```
-
-Expect about 75 raw lines on the first run.  On re-runs with no new file
-uploaded, the script prints "No new file – same hash as last run" and exits.
+The API connects to SQL Server using environment variables — connection details are kept out of source control.
 
 ---
 
-## Security
+## API Endpoints
 
-`config.ps1` is git-ignored. It holds your SQL Server instance name,
-local file paths, and (later) the `web_reader` database password.
-**Never commit it.**  `config.example.ps1` is the safe template that
-shows what values are needed without containing any real values.
+```
+GET /api/vehicles              # Paginated vehicle list
+GET /api/vehicles/:id          # Single vehicle detail
+GET /api/filters               # Available makes, body types, year range
+```
 
-Do not commit screenshots taken in SSMS — they can contain your machine
-name and Windows user name.
+Supports query params: `make`, `yearMin`, `yearMax`, `bodyClass`, `page`, `pageSize`
 
 ---
 
-## Build progress
+## Background
 
-| Step | What it builds | Status |
-|------|---------------|--------|
-| 1 | Database, schemas, staging tables (`01_create_auctionlab.sql`) | ✅ Done |
-| 2 | Repo layout, .gitignore, config template | ✅ Done |
-| 3 | Download PDF + load raw lines (`02_load_auction_pdf.ps1`) | 🔜 Next |
-| 4 | Parse raw lines → vehicle rows (T-SQL stored proc) | ⬜ |
-| 5 | VIN validation + NHTSA decode | ⬜ |
-| 6 | Analysis views and bid sheet | ⬜ |
-| 7 | Inventory + pub schema + web_reader login | ⬜ |
-| 8 | ASP.NET Core Web API | ⬜ |
-| 9 | React front end | ⬜ |
-| 10 | Scheduling + hosting | ⬜ |
+This is a personal side project.  I spend most of my professional time deep in T-SQL, stored procedures, and query optimization — this project was a chance to flex that backend muscle while also pushing myself on the full-stack side.
+
+The data pipeline starts with auction files from the towing company, gets loaded into SQL Server, and surfaces through a Node API to the React frontend. The whole thing runs on real data, not mock data.
+
+---
+
+## Screenshots
+
+Progress screenshots are committed to the `screenshots/` folder — you can see the UI evolve from the original layout to the current dark redesign.
+
+---
+
+## What's Next
+
+- Auction date countdown timers per vehicle
+- Email/SMS alert when a specific make hits the inventory
+- Admin panel to manage featured vehicles
+- Deploy to a public URL
+
+---
+
+*Built by Marvin Ndungu · Atlanta, GA*
