@@ -1,41 +1,37 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import BrowsePage from './pages/BrowsePage.jsx'
-import DetailPage from './pages/DetailPage.jsx'
+import { Routes, Route, NavLink, useNavigate } from 'react-router-dom'
+import BrowsePage  from './pages/BrowsePage'
+import DetailPage  from './pages/DetailPage'
 
-function Header() {
+function Nav() {
+  const navigate = useNavigate()
   return (
-    <header className="site-header">
-      <div className="header-inner">
-        <a href="/" className="site-logo">
-          <span className="logo-icon"></span>
-          <span className="logo-text">AuctionLab</span>
-        </a>
-        <p className="site-tagline">K.O. Towing Auction Vehicles</p>
+    <nav className="main-nav">
+      <div className="nav-logo">
+        <span className="nav-logo-red">▌</span> AuctionLab
       </div>
-    </header>
-  )
-}
 
-function Footer() {
-  return (
-    <footer className="site-footer">
-      <p>AuctionLab  Vehicle data sourced from K.O. Towing auction listings</p>
-    </footer>
+      <ul className="nav-links">
+        <li><NavLink to="/">Browse</NavLink></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="https://kotowing.com" target="_blank" rel="noreferrer">KO Towing</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+
+      <button className="nav-cta" onClick={() => navigate('/')}>
+        View All Vehicles
+      </button>
+    </nav>
   )
 }
 
 export default function App() {
   return (
-    <div className="app-shell">
-      <Header />
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<BrowsePage />} />
-          <Route path="/vehicle/:id" element={<DetailPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <>
+      <Nav />
+      <Routes>
+        <Route path="/"            element={<BrowsePage />} />
+        <Route path="/vehicle/:id" element={<DetailPage />} />
+      </Routes>
+    </>
   )
 }
