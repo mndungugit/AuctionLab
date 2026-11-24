@@ -4,6 +4,7 @@ import DetailPage  from './pages/DetailPage'
 import HowItWorksPage from './pages/HowItWorksPage'
 import AboutPage from './pages/AboutPage'
 import SavedPage from './pages/SavedPage'
+import AdminPage from './pages/AdminPage'
 import useFavorites from './hooks/useFavorites'
 
 function Nav() {
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/how-it-works" element={<HowItWorksPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/saved" element={<SavedPage />} />
+        <Route path="/admin" element={<AdminPage />} />
 
       </Routes>
     </>

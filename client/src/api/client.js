@@ -28,3 +28,27 @@ export async function getVehicles(params = {}) {
 export async function getVehicle(id) {
   return request(`/api/vehicles/${id}`)
 }
+
+/* ── Admin (requires the admin key from api/.env → ADMIN_API_KEY) ── */
+
+async function adminRequest(path, adminKey, options = {}) {
+  const res = await fetch(`${BASE}${path}`, {
+    ...options,
+    headers: { ...options.headers, 'X-Admin-Key': adminKey },
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    const err = new Error(body.error || `HTTP ${res.status}`)
+    err.status = res.status
+    throw err
+  }
+  return res.json()
+}
+
+export async function getAdminVehicles(adminKey) {
+  return adminRequest('/api/admin/vehicles', adminKey)
+}
+
+export async function toggleFeatured(id, adminKey) {
+  return adminRequest(`/api/admin/vehicles/${id}/featured`, adminKey, { method: 'POST' })
+}

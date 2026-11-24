@@ -813,8 +813,163 @@ ul   { list-style: none; }
   text-align: center;
 }
 
+/* ── ADMIN PAGE ── */
+.admin-page {
+  padding: 48px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* sign-in */
+.admin-login {
+  max-width: 380px;
+  margin: 40px auto;
+  padding: 32px 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--red);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.admin-login-hint { font-size: 13px; color: var(--fg-muted); }
+.admin-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color .15s;
+}
+.admin-input:focus { border-color: var(--red); }
+.admin-login-btn { width: 100%; justify-content: center; }
+.admin-error { font-size: 13px; color: var(--red); }
+
+/* error banner */
+.admin-error-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  background: var(--red-dim);
+  border: 1px solid var(--border-red);
+  border-radius: var(--radius);
+  font-size: 13px;
+}
+.admin-error-close {
+  background: none;
+  border: none;
+  color: var(--fg-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.admin-error-close:hover { color: var(--fg); }
+
+/* table */
+.admin-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.admin-table th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-2);
+  text-align: left;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.admin-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.admin-table tbody tr:last-child td { border-bottom: none; }
+.admin-table tbody tr { transition: background .15s; }
+.admin-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+.admin-table tr.is-featured { background: var(--red-dim); }
+.admin-table tr.is-featured:hover { background: rgba(227,30,36,0.2); }
+.admin-table tr.is-featured td:first-child { box-shadow: inset 3px 0 0 var(--red); }
+
+.admin-table .col-id { width: 56px; color: var(--fg-dim); font-variant-numeric: tabular-nums; }
+.admin-table .col-featured { width: 96px; text-align: center; }
+.admin-muted { color: var(--fg-muted); }
+.admin-vin {
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 12px;
+  color: var(--fg-muted);
+  letter-spacing: 0.04em;
+}
+.admin-vehicle-link {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.admin-vehicle-link:hover { color: var(--red); }
+.admin-empty { text-align: center; padding: 40px 14px; color: var(--fg-muted); }
+
+/* toggle switch */
+.admin-switch {
+  position: relative;
+  width: 42px;
+  height: 22px;
+  border-radius: 11px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+  vertical-align: middle;
+}
+.admin-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--fg-muted);
+  transition: transform .2s, background .2s;
+}
+.admin-switch:hover { border-color: var(--red); }
+.admin-switch:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.admin-switch--on { background: var(--red); border-color: var(--red); }
+.admin-switch--on .admin-switch-thumb { transform: translateX(20px); background: #fff; }
+.admin-switch--busy { opacity: 0.6; cursor: progress; }
+
 /* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .admin-table .col-hide-md { display: none; }
+}
 @media (max-width: 700px) {
+  .admin-page { padding-inline: 16px; }
+  .admin-table .col-hide-sm { display: none; }
   .nav-links  { display: none; }
   .hero       { padding: 40px 20px 48px; min-height: 0; }
   .stats-bar  { padding-inline: 20px; }
