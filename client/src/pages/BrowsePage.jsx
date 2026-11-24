@@ -4,6 +4,7 @@ import { getVehicles, getFilters } from '../api/client'
 import { fetchCarImage } from '../api/carImage'
 import VehicleCard from '../components/VehicleCard'
 
+
 const PAGE_SIZE = 12
 
 /* ── Manager's Special card (hero right panel) ── */
@@ -199,7 +200,7 @@ export default function BrowsePage() {
             >
               Browse Vehicles →
             </button>
-            <button className="btn-outline">How It Works</button>
+            <button className="btn-outline" onClick={() => navigate('/how-it-works')}>How It Works</button>
           </div>
         </div>
 
@@ -245,6 +246,11 @@ export default function BrowsePage() {
           </div>
         </div>
       </div>
+
+
+
+
+
 
       {/* ── BROWSE ── */}
       <section className="browse-section" id="browse-anchor">

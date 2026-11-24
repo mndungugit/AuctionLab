@@ -692,6 +692,127 @@ ul   { list-style: none; }
 .btn-carfax { background: #c0392b; color: #fff; }
 .btn-nhtsa  { background: #1a3a6b; color: #fff; }
 
+/* ── Detail actions (Save + Share) ── */
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px 28px 0;
+}
+
+/* ── Share button ── */
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--fg-muted);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.share-btn:hover { border-color: var(--red); color: var(--fg); }
+.share-btn--copied,
+.share-btn--copied:hover {
+  border-color: var(--border-red);
+  background: var(--red-dim);
+  color: var(--fg);
+}
+
+/* ── Favorite / Save button ── */
+.fav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  transition: border-color 0.15s, color 0.15s, background 0.15s, transform 0.15s;
+}
+.fav-btn-icon { font-size: 1.15em; line-height: 1; }
+
+/* round icon on vehicle cards */
+.fav-btn--icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(8,8,8,0.7);
+  color: var(--fg);
+  font-size: 17px;
+  backdrop-filter: blur(4px);
+}
+.fav-btn--icon:hover { border-color: var(--red); color: var(--red); transform: scale(1.08); }
+.fav-btn--icon.fav-btn--saved { background: var(--red); border-color: var(--red); color: #fff; }
+.card-fav {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
+
+/* labelled button on the detail page (matches .share-btn) */
+.fav-btn--full {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--fg-muted);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.fav-btn--full:hover { border-color: var(--red); color: var(--fg); }
+.fav-btn--full.fav-btn--saved {
+  border-color: var(--border-red);
+  background: var(--red-dim);
+  color: var(--fg);
+}
+.fav-btn--full.fav-btn--saved .fav-btn-icon { color: var(--red); }
+
+/* ── Nav: Saved link ── */
+.nav-links a.nav-saved {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-saved-count {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--red);
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Saved page ── */
+.saved-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.saved-empty-icon { font-size: 40px; color: var(--red); opacity: 0.6; }
+.saved-empty-cta { width: auto; padding-inline: 20px; }
+.saved-note {
+  margin-top: 32px;
+  font-size: 12px;
+  color: var(--fg-dim);
+  text-align: center;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 700px) {
   .nav-links  { display: none; }
@@ -701,6 +822,7 @@ ul   { list-style: none; }
   .detail-page    { padding-inline: 16px; }
   .detail-header,
   .detail-body    { padding-inline: 16px; }
+  .detail-actions { padding-inline: 16px; }
   .vehicle-grid   { grid-template-columns: 1fr; }
 }
 
@@ -964,3 +1086,670 @@ ul   { list-style: none; }
   }
 }
 
+/* ── HOW IT WORKS SECTION ───────────────────────── */
+/* Append these lines to the END of App.css         */
+
+.how-it-works {
+  padding: 5rem var(--side-pad, 2rem);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hiw-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.hiw-subtitle {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
+
+.hiw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.hiw-panel {
+  background: var(--surface, #111);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2rem;
+}
+
+.hiw-panel-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--red, #e31e24);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(227, 30, 36, 0.2);
+}
+
+.hiw-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.hiw-step {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.hiw-step-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: rgba(227, 30, 36, 0.2);
+  line-height: 1;
+  min-width: 2.5rem;
+  flex-shrink: 0;
+}
+
+.hiw-step-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.35rem;
+}
+
+.hiw-step-desc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.42);
+  line-height: 1.65;
+}
+
+/* ── Auction Day bar ── */
+.hiw-auction-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  background: rgba(227, 30, 36, 0.07);
+  border: 1px solid rgba(227, 30, 36, 0.3);
+  padding: 1.75rem 2rem;
+  position: relative;
+}
+
+.hiw-auction-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--red, #e31e24);
+}
+
+.hiw-auction-item {
+  text-align: center;
+}
+
+.hiw-auction-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 0.4rem;
+}
+
+.hiw-auction-value {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hiw-auction-divider {
+  width: 1px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .hiw-grid {
+    grid-template-columns: 1fr;
+  }
+  .hiw-auction-card {
+    flex-direction: column;
+    align-items: center;
+  }
+  .hiw-auction-divider {
+    width: 40px;
+    height: 1px;
+  }
+}
+
+
+/* ── HOW IT WORKS PAGE ── */
+
+.hiw-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+
+.hiw-page-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.hiw-page-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.hiw-page-sub {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.95rem;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.hiw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.hiw-panel {
+  background: var(--surface, #111);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2rem;
+}
+
+.hiw-panel-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--red, #e31e24);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(227, 30, 36, 0.2);
+}
+
+.hiw-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.hiw-step {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.hiw-step-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: rgba(227, 30, 36, 0.2);
+  line-height: 1;
+  min-width: 2.5rem;
+  flex-shrink: 0;
+}
+
+.hiw-step-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.35rem;
+}
+
+.hiw-step-desc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.42);
+  line-height: 1.65;
+}
+
+.hiw-auction-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  background: rgba(227, 30, 36, 0.07);
+  border: 1px solid rgba(227, 30, 36, 0.3);
+  padding: 1.75rem 2rem;
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+.hiw-auction-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--red, #e31e24);
+}
+
+.hiw-auction-item {
+  text-align: center;
+}
+
+.hiw-auction-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 0.4rem;
+}
+
+.hiw-auction-value {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hiw-auction-divider {
+  width: 1px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.hiw-cta-row {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .hiw-grid {
+    grid-template-columns: 1fr;
+  }
+  .hiw-auction-card {
+    flex-direction: column;
+    align-items: center;
+  }
+  .hiw-auction-divider {
+    width: 40px;
+    height: 1px;
+  }
+}
+/* ── HOW IT WORKS PAGE ──  */
+
+.hiw-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+
+.hiw-page-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.hiw-page-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.hiw-page-sub {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.95rem;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.hiw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.hiw-panel {
+  background: var(--surface, #111);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2rem;
+}
+
+.hiw-panel-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--red, #e31e24);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(227, 30, 36, 0.2);
+}
+
+.hiw-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.hiw-step {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.hiw-step-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: rgba(227, 30, 36, 0.2);
+  line-height: 1;
+  min-width: 2.5rem;
+  flex-shrink: 0;
+}
+
+.hiw-step-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.35rem;
+}
+
+.hiw-step-desc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.42);
+  line-height: 1.65;
+}
+
+.hiw-auction-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  background: rgba(227, 30, 36, 0.07);
+  border: 1px solid rgba(227, 30, 36, 0.3);
+  padding: 1.75rem 2rem;
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+.hiw-auction-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--red, #e31e24);
+}
+
+.hiw-auction-item {
+  text-align: center;
+}
+
+.hiw-auction-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 0.4rem;
+}
+
+.hiw-auction-value {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hiw-auction-divider {
+  width: 1px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.hiw-cta-row {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .hiw-grid {
+    grid-template-columns: 1fr;
+  }
+  .hiw-auction-card {
+    flex-direction: column;
+    align-items: center;
+  }
+  .hiw-auction-divider {
+    width: 40px;
+    height: 1px;
+  }
+}
+
+
+/* ── ABOUT PAGE ──  ── */
+
+.about-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+
+.about-eyebrow {
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--red, #e31e24);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* ── Mission ── */
+.about-mission {
+  margin-bottom: 4rem;
+}
+
+.about-mission-inner {
+  max-width: 700px;
+  margin-bottom: 3rem;
+}
+
+.about-mission-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.02em;
+}
+
+.about-mission-body {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+/* Pipeline */
+.about-pipeline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 1.75rem 2rem;
+  background: var(--surface, #111);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid var(--red, #e31e24);
+}
+
+.pipeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 80px;
+}
+
+.pipeline-icon {
+  font-size: 1.6rem;
+}
+
+.pipeline-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+}
+
+.pipeline-arrow {
+  font-size: 1.2rem;
+  color: var(--red, #e31e24);
+  flex-shrink: 0;
+}
+
+/* Divider */
+.about-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 3rem 0;
+}
+
+/* ── Builder Bio ── */
+.about-builder {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 3rem;
+  align-items: start;
+}
+
+.about-builder-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.about-builder-role {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 1.75rem;
+}
+
+.about-builder-body {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.52);
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.about-builder-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.about-link-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.about-link-btn:hover {
+  border-color: var(--red, #e31e24);
+  color: var(--red, #e31e24);
+}
+
+/* Skills card */
+.about-skills-card {
+  background: var(--surface, #111);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1.75rem;
+  position: relative;
+}
+
+.about-skills-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--red, #e31e24);
+}
+
+.about-skills-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--red, #e31e24);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.about-skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.about-skill-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.skill-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--red, #e31e24);
+  flex-shrink: 0;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .about-builder {
+    grid-template-columns: 1fr;
+  }
+  .about-pipeline {
+    justify-content: center;
+  }
+}
