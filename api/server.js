@@ -6,6 +6,8 @@
     GET /api/vehicles          paginated vehicle list with optional filters
     GET /api/vehicles/:id      single vehicle detail
     GET /api/filters           all filter options (makes, year range, body classes)
+    GET  /api/admin/vehicles                all vehicles + featured status   (admin key)
+    POST /api/admin/vehicles/:id/featured   toggle featured for one vehicle  (admin key)
     GET /health                liveness check
 
   Credentials come from .env (git-ignored), never hardcoded.
@@ -20,6 +22,7 @@ const cors     = require('cors');
 
 const vehiclesRouter = require('./routes/vehicles');
 const filtersRouter  = require('./routes/filters');
+const adminRouter    = require('./routes/admin');
 
 const app  = express();
 const PORT = process.env.PORT || 3001;
@@ -35,6 +38,7 @@ app.use(express.json());
 // ------------------------------------------------------------------
 app.use('/api/vehicles', vehiclesRouter);
 app.use('/api/filters',  filtersRouter);
+app.use('/api/admin',    adminRouter);     // requires X-Admin-Key header
 
 // Liveness check — handy for testing that the server is up
 app.get('/health', (req, res) => {
@@ -56,4 +60,6 @@ app.listen(PORT, () => {
     console.log(`  GET http://localhost:${PORT}/api/filters`);
     console.log(`  GET http://localhost:${PORT}/api/vehicles`);
     console.log(`  GET http://localhost:${PORT}/api/vehicles/:id`);
+    console.log(`  GET http://localhost:${PORT}/api/admin/vehicles` +
+        (process.env.ADMIN_API_KEY ? '' : '   (disabled: ADMIN_API_KEY not set)'));
 });
