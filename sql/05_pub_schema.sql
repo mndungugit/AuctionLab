@@ -47,6 +47,7 @@ GO
     - SaleDate        : the auction date this vehicle appeared on
     - IsVerified      : 1 = NHTSA confirmed the VIN; front end can
                         show a "Verified" badge
+    - IsFeatured      : 1 = admin has featured this vehicle
 
   What it deliberately omits:
     - Internal batch / raw IDs
@@ -65,7 +66,8 @@ SELECT
     vc.BodyClass,
     vc.VinAutoCorrected   AS Vin,
     vc.SaleDate,
-    vc.IsVerified
+    vc.IsVerified,
+    vc.IsFeatured
 FROM analysis.vw_VehicleCard AS vc
 WHERE vc.Make IS NOT NULL;   -- hide any rows where parsing produced no make
 GO

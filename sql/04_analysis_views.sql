@@ -82,9 +82,13 @@ SELECT
 
     -- Timestamps
     av.ParsedAt,
-    vd.DecodedAt
+    vd.DecodedAt,
+
+    -- Featured flag (set by the admin panel on the source raw line)
+    CAST(ISNULL(r.IsFeatured, 0) AS BIT) AS IsFeatured
 FROM dbo.AuctionVehicle AS av
-LEFT JOIN dbo.VinDecode  AS vd ON vd.VehicleId = av.VehicleId;
+LEFT JOIN dbo.VinDecode       AS vd ON vd.VehicleId = av.VehicleId
+LEFT JOIN stg.AuctionListRaw  AS r  ON r.RawId      = av.RawId;
 GO
 PRINT 'Step 2: analysis.vw_VehicleCard created / updated.';
 GO

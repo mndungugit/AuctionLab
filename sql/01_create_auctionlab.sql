@@ -101,6 +101,8 @@ BEGIN
         RawText     NVARCHAR(500)        NOT NULL,
         LoadedAt    DATETIME2(0)         NOT NULL
             CONSTRAINT DF_AuctionListRaw_LoadedAt DEFAULT (SYSUTCDATETIME()),
+        IsFeatured  BIT                  NOT NULL   -- set by the admin panel (see 06)
+            CONSTRAINT DF_AuctionListRaw_IsFeatured DEFAULT (0),
         CONSTRAINT PK_AuctionListRaw PRIMARY KEY CLUSTERED (RawId),
         CONSTRAINT FK_AuctionListRaw_Batch
             FOREIGN KEY (BatchId) REFERENCES dbo.AuctionBatch (BatchId),
