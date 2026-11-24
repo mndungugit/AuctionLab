@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getVehicle } from '../api/client.js'
 import { fetchCarImage } from '../api/carImage.js'
+import FavoriteButton from '../components/FavoriteButton.jsx'
 
 function Field({ label, value }) {
   if (!value && value !== 0) return null
@@ -21,7 +22,7 @@ export default function DetailPage() {
   const [error, setError]       = useState(null)
   const [imgSrc, setImgSrc]     = useState(null)
   const [imgLoaded, setImgLoaded] = useState(false)
-
+  const [copied, setCopied] = useState(false)
   useEffect(() => {
     setLoading(true)
     setError(null)
@@ -73,6 +74,28 @@ export default function DetailPage() {
     ? `https://vpic.nhtsa.dot.gov/decoder/Decoder?VIN=${vin}`
     : null
 
+
+
+    const handleShare = async () => {
+  const url = window.location.href
+  try {
+    await navigator.clipboard.writeText(url)
+  } catch {
+    // Fallback for browsers that block clipboard API
+    const input = document.createElement('input')
+    input.value = url
+    input.style.position = 'fixed'
+    input.style.opacity = '0'
+    document.body.appendChild(input)
+    input.focus()
+    input.select()
+    document.execCommand('copy')
+    document.body.removeChild(input)
+  }
+  setCopied(true)
+  setTimeout(() => setCopied(false), 2500)
+}
+
   return (
     <div className="detail-page">
       <button className="btn-back" onClick={() => navigate(-1)}>
@@ -111,6 +134,17 @@ export default function DetailPage() {
           >
             {vehicle.IsVerified ? '✓ NHTSA Verified' : 'Unverified'}
           </span>
+        </div>
+
+        {/* ---- Save + Share ---- */}
+        <div className="detail-actions">
+          <FavoriteButton vehicle={vehicle} fallbackId={id} variant="full" />
+          <button
+            className={`share-btn${copied ? ' share-btn--copied' : ''}`}
+            onClick={handleShare}
+          >
+            {copied ? '✓ Link Copied!' : '↗ Share'}
+          </button>
         </div>
 
         <div className="detail-body">

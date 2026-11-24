@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { fetchCarImage } from '../api/carImage'
+import FavoriteButton from './FavoriteButton'
 
 export default function VehicleCard({ vehicle: v, onClick }) {
   const [imgSrc, setImgSrc] = useState(null)
@@ -24,6 +25,9 @@ export default function VehicleCard({ vehicle: v, onClick }) {
       role="button"
       aria-label={`View details for ${v.ModelYear ?? ''} ${title}`}
     >
+      {/* save / favorite */}
+      <FavoriteButton vehicle={v} className="card-fav" />
+
       {/* image */}
       <div className="card-image-wrap">
         {imgSrc && !imgErr ? (
