@@ -1,6 +1,8 @@
 /*
   routes/vehicles.js
-  GET /api/vehicles            - paginated vehicle list
+  GET /api/vehicles            - paginated vehicle list (pub.usp_GetVehicles)
+                                 ?make ?yearMin ?yearMax ?bodyClass
+                                 ?featured=true|false ?page ?pageSize
   GET /api/vehicles/car-image  - proxy to Pixabay image search (must be before /:id)
   GET /api/vehicles/:id        - single vehicle by VehicleId
 */
@@ -19,41 +21,26 @@ router.get('/', async (req, res) => {
         const pool = await getPool();
         const page     = Math.max(1, parseInt(req.query.page)     || 1);
         const pageSize = Math.min(100, Math.max(1, parseInt(req.query.pageSize) || 20));
-        const offset   = (page - 1) * pageSize;
         const request  = pool.request();
-        const filters  = [];
 
-        if (req.query.make) {
-            request.input('make', sql.NVarChar, req.query.make.toUpperCase());
-            filters.push('Make = @make');
-        }
-        if (req.query.yearMin) {
-            request.input('yearMin', sql.SmallInt, parseInt(req.query.yearMin));
-            filters.push('ModelYear >= @yearMin');
-        }
-        if (req.query.yearMax) {
-            request.input('yearMax', sql.SmallInt, parseInt(req.query.yearMax));
-            filters.push('ModelYear <= @yearMax');
-        }
-        if (req.query.bodyClass) {
-            request.input('bodyClass', sql.NVarChar, req.query.bodyClass);
-            filters.push('BodyClass = @bodyClass');
-        }
+        // Filters are optional; anything not supplied is passed as NULL
+        // and the stored procedure ignores it.
+        const yearMin = parseInt(req.query.yearMin);
+        const yearMax = parseInt(req.query.yearMax);
+        const featured = req.query.featured;   // ?featured=true | false
 
-        const where = filters.length > 0 ? 'WHERE ' + filters.join(' AND ') : '';
-        request.input('offset',   sql.Int, offset);
-        request.input('pageSize', sql.Int, pageSize);
+        request.input('Make',       sql.NVarChar(100), req.query.make      || null);
+        request.input('YearMin',    sql.SmallInt,      Number.isNaN(yearMin) ? null : yearMin);
+        request.input('YearMax',    sql.SmallInt,      Number.isNaN(yearMax) ? null : yearMax);
+        request.input('BodyClass',  sql.NVarChar(100), req.query.bodyClass || null);
+        request.input('IsFeatured', sql.Bit,
+            featured === 'true' || featured === '1'  ? 1 :
+            featured === 'false' || featured === '0' ? 0 : null);
+        request.input('Page',       sql.Int, page);
+        request.input('PageSize',   sql.Int, pageSize);
 
-        const query =
-            'SELECT VehicleId, Make, Model, ModelYear, Color, ' +
-            '       BodyClass, Vin, SaleDate, IsVerified ' +
-            'FROM pub.vw_Vehicle ' +
-            where + ' ' +
-            'ORDER BY VehicleId ' +
-            'OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY; ' +
-            'SELECT COUNT(*) AS TotalCount FROM pub.vw_Vehicle ' + where + ';';
-
-        const result     = await request.query(query);
+        // Returns: [0] page of vehicles, [1] TotalCount
+        const result     = await request.execute('pub.usp_GetVehicles');
         const vehicles   = result.recordsets[0];
         const totalCount = result.recordsets[1][0].TotalCount;
 
@@ -114,7 +101,7 @@ router.get('/:id', async (req, res) => {
 
         const result = await request.query(
             'SELECT VehicleId, Make, Model, ModelYear, Color, ' +
-            '       BodyClass, Vin, SaleDate, IsVerified ' +
+            '       BodyClass, Vin, SaleDate, IsVerified, IsFeatured ' +
             'FROM pub.vw_Vehicle WHERE VehicleId = @id;'
         );
 

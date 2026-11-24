@@ -16,9 +16,16 @@
 'use strict';
 
 require('dotenv').config();
+console.log('ADMIN_API_KEY:', process.env.ADMIN_API_KEY)
 
-const express  = require('express');
-const cors     = require('cors');
+
+console.log('ADMIN_USER:', process.env.ADMIN_USER)
+console.log('ADMIN_PASS:', process.env.ADMIN_PASS)
+
+const express   = require('express');
+const cors      = require('cors');
+const rateLimit = require('express-rate-limit');
+const helmet    = require('helmet');
 
 const vehiclesRouter = require('./routes/vehicles');
 const filtersRouter  = require('./routes/filters');
@@ -27,10 +34,27 @@ const adminRouter    = require('./routes/admin');
 const app  = express();
 const PORT = process.env.PORT || 3001;
 
+app.use(helmet());
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGIN || 'http://localhost:3000'
+}));
+app.use(express.json());
+app.use('/api', rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false
+}));
+
+
+
+
 // ------------------------------------------------------------------
 // Middleware
 // ------------------------------------------------------------------
-app.use(cors());          // allow React dev server (port 3000) to call us
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGIN || 'http://localhost:3000'
+}))
 app.use(express.json());
 
 // ------------------------------------------------------------------

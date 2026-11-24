@@ -17,6 +17,7 @@ const express = require('express');
 const router  = express.Router();
 const { getPool, sql } = require('../db');
 
+
 // ------------------------------------------------------------------
 // Auth: shared admin key
 // ------------------------------------------------------------------
@@ -33,6 +34,8 @@ function requireAdminKey(req, res, next) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
     next();
+
+   
 }
 
 router.use(requireAdminKey);
